@@ -740,17 +740,15 @@ sed -i '/^join_buffer_size.*/d' /etc/my.cnf
 sed -i '/^tmp_table_size.*/d' /etc/my.cnf
 sed -i '/^max_heap_table_size.*/d' /etc/my.cnf
 sed -i '/^sql_mode.*/d' /etc/my.cnf
-sed -i '/^# WNPower pre-configured values.*/d' /etc/my.cnf
 
 sed  -i '/\[mysqld\]/a\ ' /etc/my.cnf
-sed  -i '/\[mysqld\]/a sql_mode = ALLOW_INVALID_DATES,NO_ENGINE_SUBSTITUTION' /etc/my.cnf
+sed  -i '/\[mysqld\]/a sql_mode = NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' /etc/my.cnf
 sed  -i '/\[mysqld\]/a local-infile=0' /etc/my.cnf
 sed  -i '/\[mysqld\]/a query_cache_type=1' /etc/my.cnf
 sed  -i '/\[mysqld\]/a query_cache_size=12M' /etc/my.cnf
 sed  -i '/\[mysqld\]/a join_buffer_size=12M' /etc/my.cnf
 sed  -i '/\[mysqld\]/a tmp_table_size=192M' /etc/my.cnf
 sed  -i '/\[mysqld\]/a max_heap_table_size=256M' /etc/my.cnf
-sed  -i '/\[mysqld\]/a # WNPower pre-configured values' /etc/my.cnf
 
 /scripts/restartsrv_mysql
 
