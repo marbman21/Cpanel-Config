@@ -1,6 +1,10 @@
 #!/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOMAIN=domain.com
+USERNAME=username
+EMAIL=username@example.com
+PASSWORD=test123456
 HOSTNAME=$(hostname -f)
 PASSV_PORT="50000:50100";
 PASSV_MIN=$(echo $PASSV_PORT | cut -d':' -f1)
@@ -29,7 +33,7 @@ echo "This script installs and pre-configures cPanel (CTRL + C to cancel)"
 sleep 10
 
 echo "####### SETTING CENTOS #######"
-wget https://raw.githubusercontent.com/diyarit/Centos-Config/master/configure_centos.sh -O "$CWD/configure_centos.sh" && bash "$CWD/configure_centos.sh"
+wget https://raw.githubusercontent.com/marbman21/Centos-Config/master/configure_centos.sh -O "$CWD/configure_centos.sh" && bash "$CWD/configure_centos.sh"
 
 echo "####### CPANEL PRE-CONFIGURATION ##########"
 echo "Disabling yum-cron..."
@@ -840,6 +844,15 @@ whmapi1 set_default type='default' name='basic'
 
 echo "Disabling cPanel Analytics..."
 whmapi1 participate_in_analytics enabled=0
+
+echo "Create User Account..."
+whmapi1 createacct username=$USERNAME domain=$DOMAIN bwlimit=unlimited cgi=1 contactemail=$EMAIL dkim=1 featurelist=default hasshell=1 maxaddon=unlimited maxftp=unlimited maxpark=unlimited maxpop=unlimited maxsql=unlimited pass=$PASSWORD quota=0 reseller=1 spamassassin=1 spf=1
+
+echo "Create Reeller ACL..."
+whmapi1 saveacllist acllist='default' acl-acct-summary=1 acl-add-pkg=1 acl-add-pkg-ip=1 acl-add-pkg-shell=1 acl-all=0 acl-allow-addoncreate=1 acl-allow-emaillimits-pkgs=1 acl-allow-parkedcreate=1 acl-allow-shell=1 acl-allow-unlimited-bw-pkgs=1 acl-allow-unlimited-disk-pkgs=1 acl-allow-unlimited-pkgs=1 acl-assign-root-account-enhancements=0 acl-basic-system-info=1 acl-basic-whm-functions=1 acl-clustering=1 acl-connected-applications=1 acl-cors-proxy-get=1 acl-cpanel-api=1 acl-cpanel-integration=1 acl-create-acct=1 acl-create-dns=1 acl-create-user-session=1 acl-demo-setup=0 acl-digest-auth=1 acl-edit-account=1 acl-edit-dns=1 acl-edit-mx=1 acl-edit-pkg=1 acl-file-restore=0 acl-generate-email-config=1 acl-kill-acct=1 acl-kill-dns=1 acl-limit-bandwidth=1 acl-list-accts=1 acl-list-pkgs=1 acl-locale-edit=0 acl-mailcheck=1 acl-manage-api-tokens=1 acl-manage-dns-records=1 acl-manage-oidc=1 acl-manage-styles=1 acl-mysql-info=1 acl-news=1 acl-ns-config=1 acl-park-dns=1 acl-passwd=1 acl-public-contact=1 acl-quota=1 acl-rearrange-accts=0 acl-resftp=0 acl-restart=0 acl-show-bandwidth=1 acl-software-ConfigServer-csf=0 acl-ssl=1 acl-ssl-buy=0 acl-ssl-gencrt=1 acl-ssl-info=1 acl-stats=1 acl-status=1 acl-suspend-acct=1 acl-thirdparty=1 acl-track-email=1 acl-upgrade-account=1 acl-viewglobalpackages=1
+
+echo "Apply ACL to Reseller..."
+whmapi1 setacls reseller=$USERNAME acllist=default
 
 echo "Cleaning...."
 
