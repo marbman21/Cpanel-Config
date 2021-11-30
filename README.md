@@ -5,7 +5,7 @@ This script installs and configures cPanel according to the best practices.
 ## Installation
 
 ```bash
-wget https://raw.githubusercontent.com/diyarit/Cpanel-Config/master/install_cpanel.sh -O ./install_cpanel.sh && bash install_cpanel.sh
+wget https://raw.githubusercontent.com/marbman21/Cpanel-Config/master/install_cpanel.sh -O ./install_cpanel.sh && bash install_cpanel.sh
 ```
 
 ## NOTE: Install only on CentOS 7 Minimal
