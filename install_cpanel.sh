@@ -109,7 +109,7 @@ whmapi1 sethostname hostname=$(cat /root/hostname) # Fix hostname change by cpra
 hostnamectl set-hostname $(cat /root/hostname)
 rm -f /root/hostname
 
-echo "####### SETTING CSF #######"
+echo "####### SETTING ConfigServer Explorer #######"
 if [ ! -d /etc/csf ]; then
         echo "csf not detected, downloading!"
 	touch /etc/sysconfig/iptables
@@ -120,6 +120,41 @@ if [ ! -d /etc/csf ]; then
 	systemctl enable ip6tables
 	cd /root && rm -f ./csf.tgz; wget https://download.configserver.com/csf.tgz && tar xvfz ./csf.tgz && cd ./csf && sh ./install.sh
 fi
+
+        echo "ConfigServer Explorer (cse) not detected, downloading!"
+	cd /usr/src
+	rm -fv /usr/src/cse.tgz
+	wget https://download.configserver.com/cse.tgz
+	tar -xzf cse.tgz
+	cd cse
+	sh install.sh
+	rm -Rfv /usr/src/cse*
+	
+	echo "ConfigServer ModSecurity Control (cmc) not detected, downloading!"
+	cd /usr/src
+	rm -fv /usr/src/cmc.tgz
+	wget http://download.configserver.com/cmc.tgz
+	tar -xzf cmc.tgz
+	cd cmc
+	sh install.sh
+	rm -Rfv /usr/src/cmc*
+	
+	echo "Softaculous not detected, downloading!"
+	cd /usr/src
+	wget -N http://files.softaculous.com/install.sh
+	chmod 755 install.sh
+	./install.sh
+	
+	echo "R-fx Malware Detect not detected, downloading!"	
+	cd /usr/src
+	wget https://www.rfxn.com/downloads/maldetect-current.tar.gz
+	tar -xzf maldetect-*.tar.gz
+	rm -rf maldetect-*.tar.gz
+	cd maldetect*
+	sh install.sh
+	
+echo -e "\e[1;36;40m Enabling auto quarantine in maldet configuration \e[0m"
+sed -i 's/quarantine_hits="0"/quarantine_hits="1"/g' /usr/local/maldetect/conf.maldet
 
 echo " Setting CSF..."
 yum remove firewalld -y
@@ -763,6 +798,8 @@ whmapi1 set_autossl_metadata_key key=notify_autossl_renewal value=0
 whmapi1 set_autossl_metadata_key key=notify_autossl_renewal_coverage value=0
 whmapi1 set_autossl_metadata_key key=notify_autossl_renewal_coverage_reduced value=0
 whmapi1 set_autossl_metadata_key key=notify_autossl_renewal_uncovered_domains value=0
+
+/scripts/install_lets_encrypt_autossl_provider
 
 echo "Disabling cPHulk..."
 whmapi1 disable_cphulk
