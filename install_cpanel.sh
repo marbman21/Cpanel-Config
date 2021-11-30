@@ -1,11 +1,11 @@
 #!/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOMAIN=domain.com
-USERNAME=username
+DOMAIN=linode.com
+USERNAME=linode
 EMAIL=username@example.com
 PASSWORD=test123456
-HOSTNAME=$(hostname -f)
+HOSTNAME=host.linode.com
 PASSV_PORT="49152:65534";
 PASSV_MIN=$(echo $PASSV_PORT | cut -d':' -f1)
 PASSV_MAX=$(echo $PASSV_PORT | cut -d':' -f2)
