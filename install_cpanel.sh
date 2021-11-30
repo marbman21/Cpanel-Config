@@ -29,6 +29,8 @@ if [ ! -f /etc/redhat-release ]; then
 	exit 0
 fi
 
+hostname $HOSTNAME
+
 echo "This script installs and pre-configures cPanel (CTRL + C to cancel)"
 sleep 10
 
