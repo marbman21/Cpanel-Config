@@ -6,6 +6,7 @@ USERNAME=linode
 EMAIL=username@example.com
 PASSWORD=test123456
 HOSTNAME=host.linode.com
+SSH_PORT=2202
 PASSV_PORT="49152:65534";
 PASSV_MIN=$(echo $PASSV_PORT | cut -d':' -f1)
 PASSV_MAX=$(echo $PASSV_PORT | cut -d':' -f2)
@@ -158,6 +159,9 @@ fi
 echo -e "\e[1;36;40m Enabling auto quarantine in maldet configuration \e[0m"
 sed -i 's/quarantine_hits="0"/quarantine_hits="1"/g' /usr/local/maldetect/conf.maldet
 
+echo "Changing SSH portdefault 22 a $SSH_PORT..."
+sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
+
 echo " Setting CSF..."
 yum remove firewalld -y
 yum -y install iptables-services wget perl unzip net-tools perl-libwww-perl perl-LWP-Protocol-https perl-GDGraph
@@ -212,6 +216,11 @@ sed -i 's/^PT_USERMEM = .*/PT_USERMEM = "0"/g' /etc/csf/csf.conf
 sed -i 's/^PT_USERTIME = .*/PT_USERTIME = "0"/g' /etc/csf/csf.conf
 sed -i 's/^PT_USERPROC = .*/PT_USERPROC = "0"/g' /etc/csf/csf.conf
 sed -i 's/^PT_USERRSS = .*/PT_USERRSS = "0"/g' /etc/csf/csf.conf
+
+echo "Activating ssh port ..."
+# IPv4
+CURR_CSF_IN=$(grep "^TCP_IN" /etc/csf/csf.conf | cut -d'=' -f2 | sed 's/\ //g' | sed 's/\"//g' | sed "s/,$PASSV_PORT,/,/g" | sed "s/,$PASSV_PORT//g" | sed "s/$PASSV_PORT,//g" | sed "s/,,//g")
+sed -i "s/^TCP_IN.*/TCP_IN = \"$CURR_CSF_IN,$SSH_PORT\"/" /etc/csf/csf.conf
 
 echo "Activating passive FTP range ..."
 # IPv4
