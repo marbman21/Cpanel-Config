@@ -30,8 +30,6 @@ if [ ! -f /etc/redhat-release ]; then
 	exit 0
 fi
 
-hostname $HOSTNAME
-
 echo "This script installs and pre-configures cPanel (CTRL + C to cancel)"
 sleep 10
 
@@ -41,6 +39,9 @@ wget https://raw.githubusercontent.com/marbman21/Centos-Config/master/configure_
 echo "####### CPANEL PRE-CONFIGURATION ##########"
 echo "Disabling yum-cron..."
 yum erase yum-cron -y
+
+echo "####### SETTING HOSTNAME TO $HOSTNAME ##########"
+hostname $HOSTNAME
 
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
@@ -73,10 +74,6 @@ echo "nameserver 209.244.0.3" >> /etc/resolv.conf # Level3
 echo "nameserver 8.8.4.4" >> /etc/resolv.conf # Google
 echo "######### END CONFIGURING DNS AND NETWORK ########"
 
-#echo "Changing runlevel to 3 ... "# It brought some problems with CentOS 7.7: https://bugs.centos.org/view.php?id=16440
-#systemctl isolate runlevel3.target
-#systemctl set-default runlevel3.target
-
 echo "####### INSTALLING CPANEL #######"
 if [ -f /usr/local/cpanel/cpanel ]; then
         echo "cPanel already detected, not installed, only configured (CTRL + C to cancel)"
@@ -94,19 +91,6 @@ else
 	rm -f /root/hostname
 fi
 echo "####### END INSTALLING CPANEL #######"
-
-echo "####### VERIFYING LICENSE #######"
-i=0
-while ! /usr/local/cpanel/cpkeyclt; do
-if [ $i -gt 30 ]; then
-	echo "It was retried more than $i times, it cannot be followed. License the IP and then run this script again."
-	exit 1
-fi
-	echo "CPanel license not detected, retry in 15 minutes..."
-	sleep 900
-	((i=i+1))
-done
-echo "####### END VERIFYING LICENSE #######"
 
 whmapi1 sethostname hostname=$(cat /root/hostname) # Fix hostname change by cprapid.com cpanel v90 https://docs.cpanel.net/knowledge-base/dns/automatically-issued-hostnames/
 hostnamectl set-hostname $(cat /root/hostname)
