@@ -338,9 +338,9 @@ whmapi1 set_tweaksetting key=email_outbound_spam_detect_threshold value=120
 whmapi1 set_tweaksetting key=skipspambox value=0
 whmapi1 set_tweaksetting key=skipmailman value=1
 whmapi1 set_tweaksetting key=jaildefaultshell value=1
-whmapi 1 set_tweaksetting key = php_post_max_size value = 100
-whmapi 1 set_tweaksetting key = php_upload_max_filesize value = 100
-whmapi 1 set_tweaksetting key = empty_trash_days value = 30
+whmapi1 set_tweaksetting key = php_post_max_size value = 100
+whmapi1 set_tweaksetting key = php_upload_max_filesize value = 100
+whmapi1 set_tweaksetting key = empty_trash_days value = 30
 whmapi1 set_tweaksetting key=publichtmlsubsonly value=0
 
 # DEACTIVATE PASSWORD RESET BY MAIL
@@ -751,7 +751,7 @@ echo "Updating a MariaDB 10.3..."
 whmapi1 start_background_mysql_upgrade version=10.3
 
 echo "Configuring disabled features..."
-whmapi 1 update_featurelist featurelist = disabled api_shell = 0 agora = 0 analog = 0 boxtrapper = 0 traceaddy = 0 modules-php-pear = 0 modules-perl = 0 modules-ruby = 0 pgp = 0 phppgadmin = 0 postgres = 0 ror = 0 serverstatus = 0 webalizer = 0 clamavconnector_scan = 0 lists = 0
+whmapi1 update_featurelist featurelist = disabled api_shell = 0 agora = 0 analog = 0 boxtrapper = 0 traceaddy = 0 modules-php-pear = 0 modules-perl = 0 modules-ruby = 0 pgp = 0 phppgadmin = 0 postgres = 0 ror = 0 serverstatus = 0 webalizer = 0 clamavconnector_scan = 0 lists = 0
 
 echo "defaultSetting features..."
 whmapi1 update_featurelist featurelist=default modsecurity=1 zoneedit=1 emailtrace=1
@@ -859,7 +859,7 @@ done
 /scripts/restartsrv_apache_php_fpm
 
 echo "Disabling Greylisting ..."
-whmapi 1 disable_cpgreylist
+whmapi1 disable_cpgreylist
 
 echo "Disabling Welcome Panel..."
 # https://support.cpanel.net/hc/en-us/articles/1500003456602-How-to-Disable-the-Welcome-Panel-Server-Wide-for-Newly-Created-Accounts
