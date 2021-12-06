@@ -668,7 +668,6 @@ cat > /var/cpanel/ApachePHPFPM/system_pool_defaults.yaml << EOF
 ---
 pm_max_children: 20
 pm_max_requests: 40
-php_admin_value_disable_functions : { present_ifdefault: 0 }
 EOF
 /usr/local/cpanel/scripts/php_fpm_config --rebuild
 /scripts/restartsrv_apache_php_fpm
@@ -836,7 +835,8 @@ chmod 755 /usr/bin/wget
 chmod 755 /usr/bin/curl 
 
 echo "INSTALLING PHP ImageMagick..."
-yum -y install ImageMagick-devel ImageMagick-c++-devel ImageMagick-perl
+dnf config-manager --set-enabled powertools
+dnf install ImageMagick ImageMagick-devel -y
 
 for phpver in $(ls -1 /opt/cpanel/ |grep ea-php | sed 's/ea-php//g') ; do
 
