@@ -668,7 +668,6 @@ cat > /var/cpanel/ApachePHPFPM/system_pool_defaults.yaml << EOF
 ---
 pm_max_children: 20
 pm_max_requests: 40
-php_admin_value_disable_functions : { present_ifdefault: 0 }
 EOF
 /usr/local/cpanel/scripts/php_fpm_config --rebuild
 /scripts/restartsrv_apache_php_fpm
@@ -834,26 +833,6 @@ echo "Miscellaneous..."
 # DOES NOT HAVE EXECUTION PERMITS FOR EVERYONE BY DEFAULT
 chmod 755 /usr/bin/wget
 chmod 755 /usr/bin/curl 
-
-echo "INSTALLING PHP ImageMagick..."
-yum -y install ImageMagick-devel ImageMagick-c++-devel ImageMagick-perl
-
-for phpver in $(ls -1 /opt/cpanel/ |grep ea-php | sed 's/ea-php//g') ; do
-
-        printf "\autodetect" | exec /opt/cpanel/ea-php$phpver/root/usr/bin/php -C \
-        -d include_path=/usr/share/pear \
-        -d date.timezone=UTC \
-        -d output_buffering=1 \
-        -d variables_order=EGPCS \
-        -d safe_mode=0 \
-        -d register_argc_argv="On" \
-        -d disable_functions="" \
-        /opt/cpanel/ea-php$phpver/root/usr/share/pear/peclcmd.php install imagick
-
-        #sed -i 's/extension=imagick.so//' /opt/cpanel/ea-php$phpver/root/etc/php.d/imagick.ini
-        #echo 'extension=imagick.so' >> /opt/cpanel/ea-php$phpver/root/etc/php.d/imagick.ini
-
-done
 
 /scripts/restartsrv_httpd
 /scripts/restartsrv_apache_php_fpm
